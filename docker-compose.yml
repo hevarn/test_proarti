@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      dockerfile: docker/Dockerfile
+      context: .
+      target: prod
+
+  postgres:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_PASSWORD: babar
+      POSTGRES_USER: test
+
+  dockerize:
+    image: jwilder/dockerize

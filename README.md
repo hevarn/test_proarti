@@ -1,33 +1,32 @@
 # Test
 ## Introduction
-For this test, you will be free to use any kind of libs. The goal is to give us an idea on your skills and how you resolve problematics.
+The goal is to test your skills, and the way you approach development issues.
 
-If you don't have the time to finish it, you can explain in the email how you will have done it.
+You must use php7.4 or newer and apply all best practice. (Pattern, code style, ...)
 
-You have to use php7.1 or newer
+To achieve the project you must fork the project and create a pull request.
 
 Good luck and have fun ;)
 
 ## Exercise 1 - Load CSV file
-To begin you have to load a CSV file in database.
-We must load this file with command line and through a web page.
+Create a command line, and a web page that allow us to load CSV File in a database.
 
 ## Exercise 2 - Create an API
-You have to create an rest API where we can:
+You have to create a rest API that allow to:
 
 ***GET***
 * total amount donations
 * total rewards quantity by project
-* ... free to expose what you know
+* ... fill free to expose what you know
 
 ***POST/PUT***
 * donation linked to a user, reward, project
 * user
 * project
 
-You have to use ApiPlatform
+You have to use ApiPlatform.
 
 ## Exercise 3 - Create a front application
-You have to create one or multiple page to display what you loaded in database through the API.
+You have to create one or multiple page to display what you loaded from database through the API.
 
 Bonus: use VueJS

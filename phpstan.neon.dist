@@ -1,0 +1,14 @@
+parameters:
+    level: 8
+    paths: ['src','tests']
+    bootstrapFiles:
+        - vendor/autoload.php
+        - bin/.phpunit/phpunit-8.5-0/vendor/autoload.php
+
+includes:
+    - /usr/local/src/vendor/phpstan/phpstan-symfony/extension.neon
+    - /usr/local/src/vendor/phpstan/phpstan-doctrine/extension.neon
+    - /usr/local/src/vendor/phpstan/phpstan-phpunit/extension.neon
+    - /usr/local/src/vendor/phpstan/phpstan-phpunit/rules.neon
+    - /usr/local/src/vendor/phpstan/phpstan-dibi/extension.neon
+    - /usr/local/src/vendor/phpstan/phpstan-strict-rules/rules.neon
