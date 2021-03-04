@@ -1,4 +1,4 @@
-FROM php:7.4-fpm AS base
+FROM php:8.0-fpm AS base
 
 RUN apt-get update && apt-get install  -y \
     wget \
@@ -75,5 +75,46 @@ RUN chmod 644 /etc/supervisor/conf.d/supervisord.conf
 #RUN curl -sSL https://packages.blackfire.io/gpg.key | apt-key add -
 #RUN echo "deb http://packages.blackfire.io/debian any main" | tee /etc/apt/sources.list.d/blackfire.list
 #RUN apt-get update && apt-get install -y blackfire-php && printf "blackfire.agent_socket=tcp://blackfire:8707\n" >> $PHP_INI_DIR/conf.d/zz-blackfire.ini
+
+RUN docker-php-source delete
+
+####################################
+######### SOURCES COMPOSER #########
+####################################
+
+FROM base AS sources-composer
+
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+COPY --from=composer /usr/bin/composer /usr/local/bin/composer
+
+COPY ./ /srv
+ENV COMPOSER_HOME /srv/.composer
+RUN composer install --no-dev --no-scripts --classmap-authoritative
+RUN bin/console assets:install --symlink --relative --env=prod
+RUN rm -rf ./var/cache/prod
+
+########################
+######### PROD #########
+########################
+FROM base AS prod
+
+ENV APP_ENV prod
+
+COPY --from=sources-composer /srv /srv
+
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+COPY docker/php/php.prod.ini $PHP_INI_DIR/conf.d/
+RUN chmod 644 $PHP_INI_DIR/conf.d/php.prod.ini
+
+COPY docker/supervisord/supervisord.prod.conf /etc/supervisor/conf.d/supervisord.conf
+RUN chmod 644 /etc/supervisor/conf.d/supervisord.conf
+
+RUN rm -rf /srv/.composer
+
+RUN bin/console cache:clear --env=prod
+RUN bin/console cache:warmup --env=prod
+#RUN echo "opcache.preload=/srv/var/cache/prod/App_KernelProdDebugContainer.preload.php" >> $PHP_INI_DIR/conf.d/php.prod.ini
+RUN echo "opcache.preload=/srv/config/preload.php" >> $PHP_INI_DIR/conf.d/php.prod.ini
+RUN echo "opcache.preload_user=root" >> $PHP_INI_DIR/conf.d/php.prod.ini
 
 RUN docker-php-source delete

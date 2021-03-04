@@ -10,7 +10,7 @@ EXEC_RUBY = $(DOCKER_EXEC) ruby /entrypoint
 SYMFONY = $(EXEC_PHP) bin/console
 COMPOSER = $(EXEC_PHP) /usr/local/bin/composer
 
-QA = docker run --rm -v $(PWD):/project cacahouete/phpaudit:latest
+QA = docker run --rm -v $(PWD):/project cacahouete/phpaudit:8.0
 DOCKERIZE = $(DOCKER_RUN) dockerize
 
 ##
@@ -28,6 +28,7 @@ kill:
 
 install: ## Install and start the project
 install: build
+	mkdir -p var/log
 	$(MAKE) start
 	$(MAKE) db
 
@@ -104,18 +105,18 @@ db-migr: vendor db-wait
 ## -----
 ##
 
-bin/phpunit/.phpunit/phpunit-8.5-0: vendor
+bin/phpunit/.phpunit/phpunit-9.5-0: vendor
 	$(EXEC_PHP) bin/phpunit install
 
 test: ## Run unit and functional tests
 test: tu tf
 
 tu: ## Run unit tests
-tu: vendor bin/phpunit/.phpunit/phpunit-8.5-0
+tu: vendor bin/phpunit/.phpunit/phpunit-9.5-0
 	$(EXEC_PHP) -d extension=pcov.so bin/phpunit --exclude-group functional
 
 tf: ## Run functional tests
-tf: vendor bin/phpunit/.phpunit/phpunit-8.5-0 db-test
+tf: vendor bin/phpunit/.phpunit/phpunit-9.5-0 db-test
 	$(EXEC_PHP) bin/phpunit --group functional
 	$(EXEC_PHP) vendor/bin/behat --colors
 

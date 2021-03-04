@@ -1,0 +1,37 @@
+default:
+    suites:
+        web-read:
+            contexts:
+                - ORMReadContext
+                - BrowserContext
+                - Behat\MinkExtension\Context\MinkContext
+                - behatch:context:json
+                - behatch:context:xml
+                - behatch:context:rest
+                - DebugContext:
+                    screenshotDir: './var/log'
+            filters:
+                tags: '@read'
+        web-write:
+            contexts:
+                - ORMWriteContext:
+                - BrowserContext
+                - Behat\MinkExtension\Context\MinkContext
+                - behatch:context:json
+                - behatch:context:xml
+                - behatch:context:rest
+                - DebugContext:
+                    screenshotDir: './var/log'
+            filters:
+                tags: '~@read'
+
+    extensions:
+        Behatch\Extension: ~
+        Behat\MinkExtension:
+            base_url:  'http://www.symfony-bootstraped.test/'
+            sessions:
+                default_session:
+                    goutte: ~
+
+    formatters:
+        pretty: true

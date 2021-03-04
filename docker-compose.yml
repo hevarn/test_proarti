@@ -6,6 +6,10 @@ services:
       dockerfile: docker/Dockerfile
       context: .
       target: prod
+    networks:
+      default:
+        aliases:
+          - www.symfony-bootstraped.test
 
   postgres:
     image: postgres:12-alpine
