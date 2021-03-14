@@ -13,6 +13,8 @@ Create a command line, and a web page that allow us to load CSV File in a databa
 
 bin/console app:csv-load data_exam.csv
 
+(The model should be like : [diag_object.png](diag_object.png))
+
 ## Exercise 2 - Create an API
 You have to create a rest API that allow to:
 
