@@ -18,7 +18,7 @@ return PhpCsFixer\Config::create()
         '@PHP71Migration' => true,
         'visibility_required' => ['property', 'method', 'const'],
         '@PHP71Migration:risky' => true,
-        'declare_strict_types' => false,
+        'declare_strict_types' => true,
         'array_syntax' => [
             'syntax' => 'short',
         ],
@@ -56,9 +56,13 @@ return PhpCsFixer\Config::create()
         'combine_consecutive_unsets' => true,
         'general_phpdoc_annotation_remove' => true,
         'linebreak_after_opening_tag' => true,
-        'list_syntax' => true,
+        'list_syntax' => ['syntax' => 'short'],
         'no_php4_constructor' => true,
         'ordered_class_elements' => true,
+        // The following is set to false because of problems with the 'Resource' classname
+        // (see also: https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/2678)
+        'phpdoc_types' => false,
+        'no_short_echo_tag' => true,
     ])
     ->setFinder($finder)
     ->setCacheFile(__DIR__.'/var/.php_cs.cache')
