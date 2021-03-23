@@ -10,5 +10,5 @@ includes:
     - /usr/local/src/vendor/phpstan/phpstan-doctrine/extension.neon
     - /usr/local/src/vendor/phpstan/phpstan-phpunit/extension.neon
     - /usr/local/src/vendor/phpstan/phpstan-phpunit/rules.neon
-    - /usr/local/src/vendor/phpstan/phpstan-dibi/extension.neon
     - /usr/local/src/vendor/phpstan/phpstan-strict-rules/rules.neon
+    - /usr/local/src/vendor/jangregor/phpstan-prophecy/extension.neon
