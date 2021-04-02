@@ -20,7 +20,7 @@ DOCKERIZE = $(DOCKER_RUN) dockerize
 
 build:
 	$(DOCKER_COMPOSE) pull --ignore-pull-failures
-	COMPOSE_DOCKER_CLI_BUILD=1 $(DOCKER_COMPOSE) build --pull
+	COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 $(DOCKER_COMPOSE) build --pull
 
 kill:
 	$(DOCKER_COMPOSE) kill
