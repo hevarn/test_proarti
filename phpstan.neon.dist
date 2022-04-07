@@ -3,7 +3,6 @@ parameters:
     paths: ['src','tests','features']
     bootstrapFiles:
         - vendor/autoload.php
-        - bin/.phpunit/phpunit-9.5-0/vendor/autoload.php
 
 includes:
     - /usr/local/src/vendor/phpstan/phpstan-symfony/extension.neon

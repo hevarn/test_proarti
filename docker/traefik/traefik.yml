@@ -1,0 +1,10 @@
+# API and dashboard configuration
+api:
+  insecure: true
+
+providers:
+  docker:
+    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.localhost`)"
+    exposedByDefault: false
+    watch: true
+    network: proarti-test_default

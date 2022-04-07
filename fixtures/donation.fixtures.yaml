@@ -1,0 +1,9 @@
+App\Entity\Reward:
+  reward_{1..2}:
+    __construct:
+      - 42
+      - "@reward_<current()>"
+      - "@person_<current()>"
+    amount: 42
+    reward: "@reward_<current()>"
+    person: "@person_<current()>"

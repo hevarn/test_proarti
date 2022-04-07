@@ -1,4 +1,4 @@
-php_version: 8.0
+php_version: 8.1
 
 commit_failure_conditions:
   - "project.severity.critical > 0"

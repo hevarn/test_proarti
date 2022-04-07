@@ -1,18 +1,20 @@
-version: '3.8'
-
 services:
   app:
     build:
       dockerfile: docker/Dockerfile
       context: .
-      target: prod
+      target: dev
     networks:
       default:
         aliases:
-          - www.symfony-bootstraped.test
+          - proarti-test.localhost
+          - test.proarti-test.localhost
+
+    volumes:
+      - .:/srv
 
   postgres:
-    image: postgres:12-alpine
+    image: postgres:13-alpine
     environment:
       POSTGRES_PASSWORD: babar
       POSTGRES_USER: test

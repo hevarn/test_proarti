@@ -1,0 +1,20 @@
+networks:
+  default:
+    name: proarti-test_default
+
+services:
+  traefik:
+    image: traefik:latest
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker/traefik/traefik.yml:/etc/traefik/traefik.yml
+  app:
+    labels:
+      traefik.enable: true
+      traefik.docker.network: proarti-test_default
+      traefik.http.routers.proarti-test.rule: Host(`proarti-test.localhost`) || Host(`test.proarti-test.localhost`)
+#    volumes:
+#      - ~/.composer:/home/.composer # To use composer local cache, you have to run "mkdir -p ~/.composer" before uncomment and refresh service

@@ -20,6 +20,7 @@ default:
                 - behatch:context:json
                 - behatch:context:xml
                 - behatch:context:rest
+                - behatch:context:system
                 - DebugContext:
                     screenshotDir: './var/log'
             filters:
@@ -28,7 +29,7 @@ default:
     extensions:
         Behatch\Extension: ~
         Behat\MinkExtension:
-            base_url:  'http://www.symfony-bootstraped.test/'
+            base_url:  'http://test.proarti-test.localhost/'
             sessions:
                 default_session:
                     goutte: ~

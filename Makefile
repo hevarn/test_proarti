@@ -4,13 +4,11 @@ DOCKER_RUN     = $(DOCKER_COMPOSE) run --rm
 
 EXEC_APP = $(DOCKER_EXEC) app /entrypoint
 EXEC_PHP = $(DOCKER_EXEC) app /entrypoint php -d memory_limit=-1
-EXEC_PG = $(DOCKER_EXEC) postgres /docker-entrypoint.sh
-EXEC_RUBY = $(DOCKER_EXEC) ruby /entrypoint
 
 SYMFONY = $(EXEC_PHP) bin/console
 COMPOSER = $(EXEC_PHP) /usr/local/bin/composer
 
-QA = docker run --rm -v $(PWD):/project cacahouete/phpaudit:8.0
+QA = docker run --rm -v $(PWD):/project cacahouete/phpaudit:8.1.3
 DOCKERIZE = $(DOCKER_RUN) dockerize
 
 ##
@@ -18,11 +16,11 @@ DOCKERIZE = $(DOCKER_RUN) dockerize
 ## -------
 ##
 
-build:
+build: docker-compose.override.yml
 	$(DOCKER_COMPOSE) pull --ignore-pull-failures
 	COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 $(DOCKER_COMPOSE) build --pull
 
-kill:
+kill: docker-compose.override.yml
 	$(DOCKER_COMPOSE) kill
 	$(DOCKER_COMPOSE) down --volumes --remove-orphans
 
@@ -37,16 +35,15 @@ reset: kill
 	$(MAKE) install
 
 start: ## Start the project
+start: docker-compose.override.yml
 	$(DOCKER_COMPOSE) up -d --remove-orphans --no-recreate
 
 ss: ## Start Simple : start the project and install db
-ss: start
+ss: start docker-compose.override.yml
 	$(MAKE) db
 
-start-deploy: ## Start only deploy dependencies
-	$(DOCKER_COMPOSE) up -d --remove-orphans --no-recreate ruby
-
 stop: ## Stop the project
+stop: docker-compose.override.yml
 	$(DOCKER_COMPOSE) stop
 
 clean: ## Stop the project and remove generated files
@@ -55,6 +52,20 @@ clean: kill
 
 thanks:
 	$(COMPOSER) thanks
+
+docker-compose.override.yml: docker-compose.override.yml.dist
+ifeq ($(shell test -f docker-compose.override.yml && echo -n yes),yes)
+	@echo "Your docker-compose.override.yml is outdated."
+	@while [ -z "$$CONTINUE" ]; do \
+		read -r -p "# Do you want to refresh your docker-compose.override.yml ? [y/N] : " CONTINUE; \
+	done ; \
+	if [ $$CONTINUE = "y" ] || [ $$CONTINUE = "Y" ]; then \
+		cp docker-compose.override.yml.dist docker-compose.override.yml ; \
+		echo "=> Refresh done" ; \
+	fi
+else
+	cp -n docker-compose.override.yml.dist docker-compose.override.yml
+endif
 
 .PHONY: build kill install reset start stop clean thanks
 
@@ -105,20 +116,24 @@ db-migr: vendor db-wait
 ## -----
 ##
 
-bin/phpunit/.phpunit/phpunit-9.5-0: vendor
-	$(EXEC_PHP) bin/phpunit install
-
 test: ## Run unit and functional tests
 test: tu tf
 
 tu: ## Run unit tests
-tu: vendor bin/phpunit/.phpunit/phpunit-9.5-0
-	$(EXEC_PHP) -d extension=pcov.so bin/phpunit --exclude-group functional
+tu: vendor
+	$(EXEC_PHP) -d extension=pcov.so bin/phpunit
 
 tf: ## Run functional tests
-tf: vendor bin/phpunit/.phpunit/phpunit-9.5-0 db-test
-	$(EXEC_PHP) bin/phpunit --group functional
+tf: vendor db-test
 	$(EXEC_PHP) vendor/bin/behat --colors
+
+tf1: ## Run functional tests exercice 1
+tf1: vendor db-test
+	$(EXEC_PHP) vendor/bin/behat --colors --tags ex1
+
+tf2: ## Run functional tests exercice 2
+tf2: vendor db-test
+	$(EXEC_PHP) vendor/bin/behat --colors --tags ex2
 
 # rules based on files
 update: composer.json
@@ -130,7 +145,7 @@ composer.lock: composer.json
 vendor: composer.lock
 	$(COMPOSER) install
 
-.PHONY: tests tu tf update
+.PHONY: tests tu tf tf1 tf2 update
 
 ##
 ## Quality assurance
@@ -149,41 +164,14 @@ ly: vendor
 	$(SYMFONY) lint:yaml src --parse-tags
 	$(SYMFONY) lint:yaml config --parse-tags
 
-local-php-security-checker:
-	$(EXEC_APP) curl -sSL https://github.com/fabpot/local-php-security-checker/releases/download/v1.0.0/local-php-security-checker_1.0.0_linux_amd64 -o local-php-security-checker
-	$(EXEC_APP) chmod +x local-php-security-checker
-
 security: ## Check security of your dependencies (https://security.sensiolabs.org/)
-security: local-php-security-checker
-	$(EXEC_APP) ./local-php-security-checker
-
-phploc: ## PHPLoc (https://github.com/sebastianbergmann/phploc)
-	$(QA) phploc $(APP_SRC)/
-
-pdepend: ## PHP_Depend (https://pdepend.org)
-pdepend: artefacts
-	$(QA) pdepend \
-		--summary-xml=$(ARTEFACTS)/pdepend_summary.xml \
-		--jdepend-chart=$(ARTEFACTS)/pdepend_jdepend.svg \
-		--overview-pyramid=$(ARTEFACTS)/pdepend_pyramid.svg \
-		src/
+	docker run --rm -v $(PWD):/app cacahouete/local-php-security-checker-docker
 
 md: ## PHP Mess Detector (https://phpmd.org)
 	$(QA) phpmd $(APP_SRC) text .phpmd.xml
 
-phpcodesnifer: ## PHP_CodeSnifer (https://github.com/squizlabs/PHP_CodeSniffer)
-#	$(QA) phpcs --standard=./vendor/escapestudios/symfony2-coding-standard/Symfony/ --report-full $(APP_SRC)
-	$(QA) phpcs --standard=.phpcs.xml --report-full $(APP_SRC)
-
 phpcpd: ## PHP Copy/Paste Detector (https://github.com/sebastianbergmann/phpcpd)
 	$(QA) phpcpd $(APP_SRC)
-
-phpdcd: ## PHP Dead Code Detector (https://github.com/sebastianbergmann/phpdcd)
-	$(QA) phpdcd $(APP_SRC)
-
-phpmetrics: ## PhpMetrics (http://www.phpmetrics.org)
-phpmetrics: artefacts
-	$(QA) phpmetrics --report-html=$(ARTEFACTS)/phpmetrics $(APP_SRC)
 
 stan: ## twig code style
 	$(QA) php -d memory_limit=50000M /usr/local/src/vendor/bin/phpstan.phar analyse
@@ -197,7 +185,7 @@ cs: ## php-cs-fixer (http://cs.sensiolabs.org)
 cs-fix: ## apply php-cs-fixer fixes
 	$(QA) php-cs-fixer fix
 
-.PHONY: lint lt ly phploc pdepend phpmd phpcodesnifer phpcpd phpdcd phpmetrics cs cs-fix
+.PHONY: lint lt ly phpmd phpcpd phpdcd cs cs-fix
 
 .DEFAULT_GOAL := help
 help:

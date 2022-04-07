@@ -1,0 +1,5 @@
+App\Entity\Project:
+  project_{1..2}:
+    __construct:
+      - "Donner des ailes <current()>"
+    name: "Donner des ailes <current()>"
