@@ -19,16 +19,20 @@ bin/console app:csv-load data_exam.csv
 
 Then display all lines in the web page in html table.
 
-behat test exercice_1.feature should pass to validate the exercise.
+behat test exercise_1.feature should pass to validate the exercise.
 
 ## Exercise 2 - Create an API
 You have to create a rest API that allow to:
 
 ***GET***
-* total amount donations
+* project
+    -  custom field total amount donations
+* reward
+* person
+* donation
 * ... fill free to expose what you know
 
-***POST/PUT***
+***POST/PUT/DELETE***
 * project
 * reward
 * person
@@ -36,9 +40,4 @@ You have to create a rest API that allow to:
 
 You have to use ApiPlatform.
 
-all behat test exercice_2.feature should pass to validate the exercise.
-
-## Exercise 3 - Create a front application
-You have to create one or multiple page to display what you loaded from database through the API.
-
-Bonus: use VueJS
+all behat tests exercise_2_*.feature should pass to validate the exercise.
