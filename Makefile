@@ -10,6 +10,7 @@ COMPOSER = $(EXEC_PHP) /usr/local/bin/composer
 
 QA = docker run --rm -v $(PWD):/project cacahouete/phpaudit:8.1.3
 DOCKERIZE = $(DOCKER_RUN) dockerize
+APP_SRC = src
 
 ##
 ## Project
