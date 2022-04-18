@@ -1,0 +1,42 @@
+{% extends "base.html.twig" %}
+
+{% block project %}
+    <section id="project">
+        <div class="title">
+            projets
+        </div>
+        <div class="wrapper">
+            {% for project in projects %}
+                <div class="slide">
+                    <div class="card">
+                        <div class="additional">
+                            <div class="more-info">
+                                <h1>{{ project.getProjectName }}</h1>
+                                <div class="coords">
+                                    <div class="stat">
+                                        <div class="title_stat">
+                                            <p style="text-transform: uppercase">recompense obtenue</p>
+                                        </div>
+                                        <div class="title_reward">
+                                            {% for rewards in project.getRewards %}
+                                                <div class="value"> {{ rewards.getReward }}</div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="general">
+                            <h1>{{ project.getProjectName }}</h1>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce a volutpat mauris, at
+                                molestie lacus. Nam vestibulum sodales odio ut pulvinar.</p>
+                            <p></p>
+                            <span class="more">Mouse over the card for more info</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

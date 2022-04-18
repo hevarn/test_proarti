@@ -1,0 +1,28 @@
+.general_title, .choice{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    font-size: var(--XXL_font);
+    text-transform: uppercase;
+    font-family: var(--MuseoSans700);
+    color: var(--color_white);
+}
+
+.choice {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
+
+}
+
+.choice .title_choice{
+    padding:1rem;
+    transition: .5s ease;
+}
+.choice .title_choice:hover{
+    transition: .5s ease;
+    border: 1px solid var(--color_white);
+    box-shadow: 5px 5px 0 var(--color_white);
+}

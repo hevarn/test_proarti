@@ -1,0 +1,86 @@
+
+/* -- BTN SLIDER  --
+===============================
+////////////////////////////////
+============================== */
+
+
+#person .content-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: absolute;
+    width: 300px;
+    top: 82%;
+    right: 50%;
+    text-align: right;
+    transform: translateX(50%);
+}
+#person .title {
+    display: block;
+    text-transform: uppercase;
+    position: relative;
+    letter-spacing: 3px;
+    color: var(--color_3);
+    font-weight: bold;
+    margin: 0 0 35px 0;
+
+}
+
+#person .custom_title span{
+    margin-bottom: 0.1rem;
+}
+#person .swiper_btn{
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-evenly;
+}
+#person .swiper-slide .subtitle {
+    font-size: 18px;
+    color: #888;
+    font-weight: 300;
+    margin: 15px 0;
+    margin-bottom: 50px;
+}
+#person .btn.btn-main, #person .btn.btn-main_ {
+    background: var(--color_3);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 400;
+    outline: none;
+    border:none;
+    position: relative;
+    padding: 7px 7px;
+    width: 104px;
+    height: 43px;
+}
+#person .swiper-button-next:after, #person .swiper-button-prev:after{
+    display: none;
+}
+/*#person .btn.btn-main:before{*/
+/*    content: '';*/
+/*    width: 5px;*/
+/*    background: var(--color_black);*/
+/*    height: 100%;*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*}*/
+
+/*#person .btn.btn-main_:before {*/
+/*    content: '';*/
+/*    width: 5px;*/
+/*    background: var(--color_black);*/
+/*    height: 100%;*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    right: 0;*/
+/*}*/
+#btn_prev{
+    margin-right:1rem;
+}
+
+#person .swiper-button-next{
+
+}
